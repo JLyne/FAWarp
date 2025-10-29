@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.1"
-    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("com.gradleup.shadow") version "9.2.2"
+    id("de.eldoria.plugin-yml.paper") version "0.8.0"
     id("com.diffplug.spotless") version "7.0.0.BETA2"
 }
 
@@ -14,18 +14,18 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
     implementation("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
     }
 
-    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.10")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.13")
+    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.13")
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 tasks {
@@ -46,7 +46,7 @@ tasks {
 
 paper {
     main = "fi.fabianadrian.fawarp.FAWarp"
-    apiVersion = "1.19.4"
+    apiVersion = "1.21.10"
     authors = listOf("FabianAdrian")
 }
 
