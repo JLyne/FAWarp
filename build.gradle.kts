@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     id("java")
     id("de.eldoria.plugin-yml.paper") version "0.8.0"
@@ -36,6 +38,37 @@ paper {
     apiVersion = "1.21.11"
     generateLibrariesJson = true
     authors = listOf("FabianAdrian", "Jim (AnEnragedPigeon)")
+    permissions {
+        register("fwarp.command.root.reload") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /fawarp reload"
+        }
+
+        register("fawarp.command.setwarp") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /setwarp"
+        }
+
+        register("fawarp.command.unsetwarp") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /unsetwarp"
+        }
+
+        register("fawarp.command.warp") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /warp to teleport yourself"
+        }
+
+        register("fawarp.command.warp.player") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /warp to teleport other players"
+        }
+
+        register("fawarp.command.warplist") {
+            default = BukkitPluginDescription.Permission.Default.OP
+            description = "Allows use of /warplist"
+        }
+    }
 }
 
 spotless {
