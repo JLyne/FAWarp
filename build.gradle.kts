@@ -1,6 +1,5 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.3.0"
     id("de.eldoria.plugin-yml.paper") version "0.8.0"
     id("com.diffplug.spotless") version "7.0.0.BETA2"
 }
@@ -16,7 +15,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
-    implementation("org.spongepowered:configurate-yaml:4.1.2") {
+    paperLibrary("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
     }
 }
@@ -26,23 +25,17 @@ java {
 }
 
 tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-    shadowJar {
-        minimize()
-        sequenceOf(
-            "org.spongepowered.configurate",
-        ).forEach { pkg ->
-            relocate(pkg, "fi.fabianadrian.fawarp.dependency.$pkg")
-        }
+    generatePaperPluginDescription {
+        useDefaultCentralProxy()
     }
 }
 
 paper {
     main = "fi.fabianadrian.fawarp.FAWarp"
+    loader = "fi.fabianadrian.fawarp.FAWarpLoader"
     apiVersion = "1.21.11"
-    authors = listOf("FabianAdrian")
+    generateLibrariesJson = true
+    authors = listOf("FabianAdrian", "Jim (AnEnragedPigeon)")
 }
 
 spotless {
