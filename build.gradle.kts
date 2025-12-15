@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.2.2"
+    id("com.gradleup.shadow") version "9.3.0"
     id("de.eldoria.plugin-yml.paper") version "0.8.0"
     id("com.diffplug.spotless") version "7.0.0.BETA2"
 }
