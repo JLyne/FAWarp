@@ -19,9 +19,6 @@ dependencies {
     implementation("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
     }
-
-    implementation("org.incendo:cloud-paper:2.0.0-beta.13")
-    implementation("org.incendo:cloud-minecraft-extras:2.0.0-beta.13")
 }
 
 java {
@@ -35,9 +32,7 @@ tasks {
     shadowJar {
         minimize()
         sequenceOf(
-            "org.incendo.cloud",
             "org.spongepowered.configurate",
-            "io.leangen.geantyref"
         ).forEach { pkg ->
             relocate(pkg, "fi.fabianadrian.fawarp.dependency.$pkg")
         }

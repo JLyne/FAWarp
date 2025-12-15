@@ -1,24 +1,16 @@
 package fi.fabianadrian.fawarp.command.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import fi.fabianadrian.fawarp.FAWarp;
 import fi.fabianadrian.fawarp.command.FAWarpCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.component.DefaultValue;
-import org.incendo.cloud.context.CommandContext;
-import org.incendo.cloud.help.result.CommandEntry;
-import org.incendo.cloud.minecraft.extras.AudienceProvider;
-import org.incendo.cloud.minecraft.extras.MinecraftHelp;
-import org.incendo.cloud.suggestion.Suggestion;
-import org.incendo.cloud.suggestion.SuggestionProvider;
 
-import java.util.stream.Collectors;
-
+import static io.papermc.paper.command.brigadier.Commands.literal;
 import static net.kyori.adventure.text.Component.translatable;
-import static org.incendo.cloud.parser.standard.StringParser.greedyStringParser;
 
 public final class RootCommand extends FAWarpCommand {
 	private static final Component COMPONENT_RELOAD = translatable("fawarp.command.root.reload");
@@ -28,35 +20,19 @@ public final class RootCommand extends FAWarpCommand {
 	}
 
 	@Override
-	public void register() {
-		Command.Builder<CommandSender> builder = this.manager.commandBuilder("fawarp");
-		this.manager.command(builder.literal("reload").permission("fawarp.command.root.reload").handler(this::reloadHandler));
+	public void register(Commands registrar) {
+		LiteralCommandNode<CommandSourceStack> command = literal("fawarp")
+				.then(literal("reload")
+							.requires(source -> source.getSender().hasPermission("fawarp.command.root.reload"))
+							.executes(this::reloadHandler)).build();
 
-		MinecraftHelp<CommandSender> help = MinecraftHelp.<CommandSender>builder()
-				.commandManager(this.manager)
-				.audienceProvider(AudienceProvider.nativeAudience())
-				.commandPrefix("/fawarp help")
-				.colors(MinecraftHelp.helpColors(NamedTextColor.WHITE, TextColor.color(56, 189, 248), NamedTextColor.WHITE, NamedTextColor.WHITE, TextColor.color(17, 24, 39)))
-				.build();
-
-		Command.Builder<CommandSender> helpBuilder = builder.literal("help")
-				.optional(
-						"query",
-						greedyStringParser(),
-						DefaultValue.constant(""),
-						SuggestionProvider.blocking((ctx, in) -> this.manager.createHelpHandler()
-								.queryRootIndex(ctx.sender())
-								.entries()
-								.stream()
-								.map(CommandEntry::syntax)
-								.map(Suggestion::suggestion)
-								.collect(Collectors.toList())))
-				.handler(context -> help.queryCommands(context.get("query"), context.sender()));
-		this.manager.command(helpBuilder);
+		registrar.register(command, "Base command");
 	}
 
-	private void reloadHandler(CommandContext<CommandSender> context) {
+	private int reloadHandler(CommandContext<CommandSourceStack> ctx) {
 		this.plugin.reload();
-		context.sender().sendMessage(COMPONENT_RELOAD);
+		ctx.getSource().getSender().sendMessage(COMPONENT_RELOAD);
+
+		return Command.SINGLE_SUCCESS;
 	}
 }

@@ -1,26 +1,18 @@
 package fi.fabianadrian.fawarp;
 
-import fi.fabianadrian.fawarp.command.FAWarpCommand;
-import fi.fabianadrian.fawarp.command.FAWarpCaptionFormatter;
 import fi.fabianadrian.fawarp.command.commands.*;
-import fi.fabianadrian.fawarp.command.processor.FAWarpCommandPreprocessor;
 import fi.fabianadrian.fawarp.config.ConfigurationManager;
 import fi.fabianadrian.fawarp.listener.ServerListener;
 import fi.fabianadrian.fawarp.locale.TranslationManager;
 import fi.fabianadrian.fawarp.warp.WarpManager;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.minecraft.extras.MinecraftExceptionHandler;
-import org.incendo.cloud.minecraft.extras.caption.TranslatableCaption;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
 
 import java.util.List;
 
 public final class FAWarp extends JavaPlugin {
-	private LegacyPaperCommandManager<CommandSender> commandManager;
 	private ConfigurationManager configurationManager;
 	private WarpManager warpManager;
 
@@ -32,13 +24,7 @@ public final class FAWarp extends JavaPlugin {
 		this.warpManager = new WarpManager(this);
 
 		setupCommandManager();
-		registerCommands();
-
 		registerListeners();
-	}
-
-	public LegacyPaperCommandManager<CommandSender> commandManager() {
-		return this.commandManager;
 	}
 
 	public void reload() {
@@ -55,27 +41,19 @@ public final class FAWarp extends JavaPlugin {
 	}
 
 	private void setupCommandManager() {
-		this.commandManager = LegacyPaperCommandManager.createNative(this, ExecutionCoordinator.simpleCoordinator());
-
-		if (this.commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
-			this.commandManager.registerBrigadier();
-		} else if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-			this.commandManager.registerAsynchronousCompletions();
-		}
-
-		this.commandManager.registerCommandPreProcessor(new FAWarpCommandPreprocessor<>(this));
-		this.commandManager.captionRegistry().registerProvider(TranslatableCaption.translatableCaptionProvider());
-		MinecraftExceptionHandler.<CommandSender>createNative().defaultHandlers().captionFormatter(new FAWarpCaptionFormatter<>()).registerTo(this.commandManager);
+		getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, e -> {
+			registerCommands(e.registrar());
+		});
 	}
 
-	private void registerCommands() {
+	private void registerCommands(Commands registrar) {
 		List.of(
 				new RootCommand(this),
 				new SetWarpCommand(this),
 				new UnsetWarpCommand(this),
 				new WarpCommand(this),
 				new WarpListCommand(this)
-		).forEach(FAWarpCommand::register);
+		).forEach(c -> c.register(registrar));
 	}
 
 	private void registerListeners() {

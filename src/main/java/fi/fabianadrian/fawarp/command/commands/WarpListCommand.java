@@ -1,13 +1,16 @@
 package fi.fabianadrian.fawarp.command.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import fi.fabianadrian.fawarp.FAWarp;
 import fi.fabianadrian.fawarp.command.FAWarpCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
-import org.bukkit.command.CommandSender;
-import org.incendo.cloud.Command;
-import org.incendo.cloud.context.CommandContext;
 
+import java.util.List;
 import java.util.StringJoiner;
 
 import static net.kyori.adventure.text.Component.text;
@@ -22,15 +25,19 @@ public final class WarpListCommand extends FAWarpCommand {
 	}
 
 	@Override
-	public void register() {
-		Command.Builder<CommandSender> builder = this.manager.commandBuilder("warplist", "warps").permission("fawarp.command.warplist");
-		this.manager.command(builder.handler(this::listHandler));
+	public void register(Commands registar) {
+		LiteralCommandNode<CommandSourceStack> command = Commands.literal("warplist")
+				.requires(source -> source.getSender().hasPermission("fawarp.command.warplist"))
+				.executes(this::listHandler)
+				.build();
+
+		registar.register(command, "Lists available warps", List.of("warps"));
 	}
 
-	private void listHandler(CommandContext<CommandSender> context) {
+	private int listHandler(CommandContext<CommandSourceStack> ctx) {
 		StringJoiner joiner = new StringJoiner(", ");
 		this.plugin.warpManager().warps().forEach(warp -> {
-			if (!context.sender().hasPermission(warp.permission())) {
+			if (!ctx.getSource().getSender().hasPermission(warp.permission())) {
 				return;
 			}
 
@@ -39,10 +46,12 @@ public final class WarpListCommand extends FAWarpCommand {
 
 		String availableWarps = joiner.toString();
 		if (availableWarps.isBlank()) {
-			context.sender().sendMessage(COMPONENT_EMPTY);
-			return;
+			ctx.getSource().getSender().sendMessage(COMPONENT_EMPTY);
+			return Command.SINGLE_SUCCESS;
 		}
 
-		context.sender().sendMessage(Component.join(JoinConfiguration.newlines(), COMPONENT_HEADER, text(joiner.toString())));
+		ctx.getSource().getSender().sendMessage(Component.join(JoinConfiguration.newlines(), COMPONENT_HEADER, text(joiner.toString())));
+
+		return Command.SINGLE_SUCCESS;
 	}
 }
