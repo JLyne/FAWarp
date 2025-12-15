@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     implementation("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
@@ -41,7 +41,7 @@ tasks {
 
 paper {
     main = "fi.fabianadrian.fawarp.FAWarp"
-    apiVersion = "1.21.10"
+    apiVersion = "1.21.11"
     authors = listOf("FabianAdrian")
 }
 

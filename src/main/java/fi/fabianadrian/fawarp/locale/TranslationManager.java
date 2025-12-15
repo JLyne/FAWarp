@@ -2,9 +2,11 @@ package fi.fabianadrian.fawarp.locale;
 
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.translation.GlobalTranslator;
-import net.kyori.adventure.translation.TranslationRegistry;
+import net.kyori.adventure.translation.TranslationStore;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -14,12 +16,12 @@ public final class TranslationManager {
 	public static final List<Locale> BUNDLED_LOCALES = List.of(Locale.of("fi", "FI"));
 
 	private final Logger logger;
-	private final TranslationRegistry registry;
+	private final TranslationStore.@NotNull StringBased<MessageFormat> registry;
 
 	public TranslationManager(Logger logger) {
 		this.logger = logger;
 
-		this.registry = TranslationRegistry.create(Key.key("faspawn", "main"));
+		this.registry = TranslationStore.messageFormat(Key.key("faspawn", "main"));
 		this.registry.defaultLocale(DEFAULT_LOCALE);
 
 		loadFromResourceBundle();
