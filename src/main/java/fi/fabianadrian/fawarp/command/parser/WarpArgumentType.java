@@ -51,6 +51,7 @@ public final class WarpArgumentType implements CustomArgumentType<Warp, String> 
 		List<Warp> warps = plugin.warpManager().warps();
 		warps.stream().filter(warp -> stack.getSender().hasPermission(warp.permission()))
 				.map(Warp::name)
+				.filter(n -> n.toLowerCase().startsWith(builder.getRemainingLowerCase()))
 				.forEach(builder::suggest);
 
 		return builder.buildFuture();
