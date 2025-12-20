@@ -41,8 +41,8 @@ public final class WarpCommand extends FAWarpCommand {
 	@Override
 	public void register(Commands registrar) {
 		LiteralCommandNode<CommandSourceStack> command = literal("warp")
+				.requires(source -> source.getSender().hasPermission("fawarp.command.warp"))
 				.then(argument("warp", warpArgumentType)
-							.requires(source -> source.getSender().hasPermission("fawarp.command.warp"))
 							.executes(this::warpHandler)
 							.then(argument("player", players())
 										.requires(source -> source.getSender().hasPermission("fawarp.command.warp.player"))

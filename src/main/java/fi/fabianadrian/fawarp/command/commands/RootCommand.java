@@ -22,8 +22,8 @@ public final class RootCommand extends FAWarpCommand {
 	@Override
 	public void register(Commands registrar) {
 		LiteralCommandNode<CommandSourceStack> command = literal("fawarp")
+				.requires(source -> source.getSender().hasPermission("fawarp.command.root.reload"))
 				.then(literal("reload")
-							.requires(source -> source.getSender().hasPermission("fawarp.command.root.reload"))
 							.executes(this::reloadHandler)).build();
 
 		registrar.register(command, "Base command");
