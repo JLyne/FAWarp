@@ -2,7 +2,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     id("java")
-    id("de.eldoria.plugin-yml.paper") version "0.8.0"
+    id("de.eldoria.plugin-yml.paper") version "0.9.0"
     id("com.diffplug.spotless") version "7.0.0.BETA2"
 }
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     paperLibrary("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
@@ -35,7 +35,7 @@ tasks {
 paper {
     main = "fi.fabianadrian.fawarp.FAWarp"
     loader = "fi.fabianadrian.fawarp.FAWarpLoader"
-    apiVersion = "1.21.11"
+    apiVersion = "26.1.1"
     generateLibrariesJson = true
     authors = listOf("FabianAdrian", "Jim (AnEnragedPigeon)")
     permissions {
