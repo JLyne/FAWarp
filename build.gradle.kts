@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
 
     paperLibrary("org.spongepowered:configurate-yaml:4.1.2") {
         exclude("org.yaml")
@@ -35,7 +35,7 @@ tasks {
 paper {
     main = "fi.fabianadrian.fawarp.FAWarp"
     loader = "fi.fabianadrian.fawarp.FAWarpLoader"
-    apiVersion = "26.1.1"
+    apiVersion = "26.1.2"
     generateLibrariesJson = true
     authors = listOf("FabianAdrian", "Jim (AnEnragedPigeon)")
     permissions {
