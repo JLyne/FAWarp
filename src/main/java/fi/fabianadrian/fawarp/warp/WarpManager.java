@@ -3,8 +3,8 @@ package fi.fabianadrian.fawarp.warp;
 import fi.fabianadrian.fawarp.FAWarp;
 import fi.fabianadrian.fawarp.config.ConfigurationManager;
 import org.bukkit.Location;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public final class WarpManager {
