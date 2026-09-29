@@ -2,6 +2,7 @@ package fi.fabianadrian.fawarp.config.serializer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -24,7 +25,7 @@ public final class LocationSerializer implements TypeSerializer<Location> {
 	@Override
 	public Location deserialize(Type type, ConfigurationNode source) throws SerializationException {
 		final ConfigurationNode worldNode = nonVirtualNode(source, WORLD);
-		final String worldName = worldNode.getString();
+		final NamespacedKey worldName = NamespacedKey.fromString(worldNode.getString(""));
 
 		if (worldName == null) {
 			throw new SerializationException("World name was null!");
@@ -45,7 +46,7 @@ public final class LocationSerializer implements TypeSerializer<Location> {
 			return;
 		}
 
-		target.node(WORLD).set(location.getWorld().getName());
+		target.node(WORLD).set(location.getWorld().getKey());
 		target.node(X).set(location.getX());
 		target.node(Y).set(location.getY());
 		target.node(Z).set(location.getZ());
