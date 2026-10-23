@@ -25,13 +25,25 @@ public final class LocationSerializer implements TypeSerializer<Location> {
 	@Override
 	public Location deserialize(Type type, ConfigurationNode source) throws SerializationException {
 		final ConfigurationNode worldNode = nonVirtualNode(source, WORLD);
-		final NamespacedKey worldName = NamespacedKey.fromString(worldNode.getString(""));
+		final String worldName = worldNode.getString();
+		World world = null;
 
 		if (worldName == null) {
 			throw new SerializationException("World name was null!");
 		}
 
-		World world = Bukkit.getWorld(worldName);
+		NamespacedKey worldKey = NamespacedKey.fromString(worldName);
+
+		if(worldKey != null) {
+			world = Bukkit.getWorld(worldKey);
+		}
+
+		// Fallback to world name
+		if (world == null) {
+			//noinspection UsagesOfObsoleteApi
+			world = Bukkit.getWorld(worldName);
+		}
+
 		if (world == null) {
 			throw new SerializationException("World does not exist or is not loaded yet!");
 		}
