@@ -16,7 +16,6 @@ public final class ConfigurationManager {
 	public void reload() {
 		try {
 			this.configuration = this.configurationLoader.load();
-			this.configurationLoader.save(this.configuration);
 		} catch (ConfigurateException e) {
 			throw new IllegalStateException("Failed to load config", e);
 		}
